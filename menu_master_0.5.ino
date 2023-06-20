@@ -59,7 +59,7 @@ void drawHomeScreen()
   tft.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, DARKER_GREEN);
   tft.setTextColor(WHITE); // Define a cor do texto para branco
   tft.setTextSize(3); // Define o tamanho do texto para 3
-  tft.setCursor(buttonX + (buttonWidth - 30) / 4, buttonY + (buttonHeight - textHeight) / 2);
+  tft.setCursor(buttonX + (buttonWidth - 30) / 4 - 10, buttonY + (buttonHeight - textHeight) / 2);
   tft.println("INICIAR"); // Escreve o texto no botão
 
   // BOTÃO AJUSTAR VALVULAS
@@ -67,7 +67,7 @@ void drawHomeScreen()
   tft.fillRoundRect(buttonX, ajustesButtonY, buttonWidth, buttonHeight, 10, BLUE);
   tft.setTextColor(WHITE);
   tft.setTextSize(3);
-  tft.setCursor(buttonX + (buttonWidth - 50) / 4, ajustesButtonY + (buttonHeight - 8) / 3);
+  tft.setCursor(buttonX + (buttonWidth - 50) / 4 - 10, ajustesButtonY + (buttonHeight - 8) / 3);
   tft.println("VALVULAS");
 
   // Informação das válvulas ativas
@@ -77,11 +77,11 @@ void drawHomeScreen()
   int valveInfoY = 280; // Posição Y 
   int valveInfoSpacing = 5; // Espaçamento entre os retângulos das válvulas ativas
 
-  tft.fillRoundRect(valveInfoX, valveInfoY, valveInfoWidth, valveInfoHeight, 5, GREEN);
+  tft.fillRoundRect(valveInfoX, valveInfoY, valveInfoWidth, valveInfoHeight, 5, BLUE);
   tft.setTextColor(WHITE);
   tft.setTextSize(2);
-  tft.setCursor(valveInfoX + valveInfoHeight + valveInfoSpacing, valveInfoY + valveInfoHeight / 2);
-  tft.println("VALVULA: 0");
+  tft.setCursor(407, 287);
+  tft.println("V: 0");
 }
 
 void setup() 
