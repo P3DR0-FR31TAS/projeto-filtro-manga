@@ -25,30 +25,25 @@ bool iniciarPrograma = false;
 
 void drawHomeScreen()
 {
+  // TITULO "MENU PRINCIPAL"
   tft.setTextSize(3); 
-  tft.setTextColor(BLUE);
+  tft.setTextColor(BLACK);
 
+  // RETANGULO DO TITULO
+  tft.fillRect(20, 20, 440, 30, BLUE);
+  
   // ALINHA E IMPRIME NO DISPLAY "MENU PRINCIPAL" 
   int16_t textWidth, textHeight;
   tft.getTextBounds("MENU PRINCIPAL", 0, 0, nullptr, nullptr, &textWidth, &textHeight);
 
   int16_t textX = (tft.width() - textWidth) / 2; // Centraliza o texto horizontalmente
-  int16_t textY = 15; // Posição vertical do texto
+  int16_t textY = 25; // Posição vertical do texto
 
   tft.setCursor(textX, textY);
   tft.print("MENU PRINCIPAL");
   //-------------------------------
 
-  // LINHA HORIZONTAL
-  int16_t x = 0;          // coordenada x do ponto inicial
-  int16_t y = 50;         // coordenada y do ponto inicial
-  int16_t width = 480;    // largura da linha
-  int16_t thickness = 3;  // espessura da linha
-  uint16_t color = BLUE;  // cor da linha
 
-  for (int16_t i = 0; i < thickness; i++) {
-    tft.drawFastHLine(x, y + i, width, color);
-  }
   //-------------------------------
 
   int screenWidth = tft.width();
