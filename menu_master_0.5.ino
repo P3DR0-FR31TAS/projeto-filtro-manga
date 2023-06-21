@@ -20,12 +20,15 @@ namespace
   Adafruit_GFX &tft = Waveshield;
 }
 
+// Variáveis globais
+bool iniciarPrograma = false;
+
 void drawHomeScreen()
 {
-  tft.setTextSize(3);
+  tft.setTextSize(3); 
   tft.setTextColor(BLUE);
 
-  // ALINHA E IMPRIME "MENU PRINCIPAL" 
+  // ALINHA E IMPRIME NO DISPLAY "MENU PRINCIPAL" 
   int16_t textWidth, textHeight;
   tft.getTextBounds("MENU PRINCIPAL", 0, 0, nullptr, nullptr, &textWidth, &textHeight);
 
@@ -37,37 +40,39 @@ void drawHomeScreen()
   //-------------------------------
 
   // LINHA HORIZONTAL
-  int16_t x = 0;       // coordenada x do ponto inicial
-  int16_t y = 50;      // coordenada y do ponto inicial
-  int16_t width = 480;  // largura da linha
-  int16_t thickness = 3; // espessura da linha
-  uint16_t color = BLUE; // cor da linha
+  int16_t x = 0;          // coordenada x do ponto inicial
+  int16_t y = 50;         // coordenada y do ponto inicial
+  int16_t width = 480;    // largura da linha
+  int16_t thickness = 3;  // espessura da linha
+  uint16_t color = BLUE;  // cor da linha
 
   for (int16_t i = 0; i < thickness; i++) {
     tft.drawFastHLine(x, y + i, width, color);
   }
   //-------------------------------
 
-  int buttonWidth = 200;
-  int buttonHeight = 50;
   int screenWidth = tft.width();
   int screenHeight = tft.height();
+  int buttonWidth = 160;
+  int buttonHeight = 70;
   int buttonX = (screenWidth - buttonWidth) / 2;
-  int buttonY = (screenHeight - buttonHeight) / 2 - 60;
+  int buttonY = (screenHeight - buttonHeight) / 2 - 50;
 
   // BUTÃO INCIAR PROGRAMA / ENCERRAR PROGRAMA
-  tft.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, DARKER_GREEN);
-  tft.setTextColor(WHITE); // Define a cor do texto para branco
+  tft.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, DARKER_GREEN);
+  tft.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, WHITE);
+  tft.setTextColor(BLACK); // Define a cor do texto para branco
   tft.setTextSize(3); // Define o tamanho do texto para 3
-  tft.setCursor(buttonX + (buttonWidth - 30) / 4 - 10, buttonY + (buttonHeight - textHeight) / 2);
+  tft.setCursor(buttonX + (buttonWidth - 30) / 4 - 17, buttonY + (buttonHeight - textHeight) / 2);
   tft.println("INICIAR"); // Escreve o texto no botão
 
   // BOTÃO AJUSTAR VALVULAS
   int ajustesButtonY = buttonY + buttonHeight + 20;
-  tft.fillRoundRect(buttonX, ajustesButtonY, buttonWidth, buttonHeight, 10, BLUE);
-  tft.setTextColor(WHITE);
+  tft.fillRoundRect(buttonX, ajustesButtonY, buttonWidth, buttonHeight, 5, BLUE);
+  tft.drawRoundRect(buttonX, ajustesButtonY, buttonWidth, buttonHeight, 5, WHITE);
+  tft.setTextColor(BLACK);
   tft.setTextSize(3);
-  tft.setCursor(buttonX + (buttonWidth - 50) / 4 - 10, ajustesButtonY + (buttonHeight - 8) / 3);
+  tft.setCursor(buttonX + (buttonWidth - 50) / 4 - 17, ajustesButtonY + (buttonHeight - 8) / 3 + 5);
   tft.println("VALVULAS");
 
   // Informação das válvulas ativas
@@ -75,10 +80,10 @@ void drawHomeScreen()
   int valveInfoHeight = 30;
   int valveInfoX = tft.width() - valveInfoWidth - 10; // Posição X 
   int valveInfoY = 280; // Posição Y 
-  int valveInfoSpacing = 5; // Espaçamento entre os retângulos das válvulas ativas
 
   tft.fillRoundRect(valveInfoX, valveInfoY, valveInfoWidth, valveInfoHeight, 5, BLUE);
-  tft.setTextColor(WHITE);
+  tft.drawRoundRect(valveInfoX, valveInfoY, valveInfoWidth, valveInfoHeight, 5, WHITE);
+  tft.setTextColor(BLACK);
   tft.setTextSize(2);
   tft.setCursor(407, 287);
   tft.println("V: 0");
@@ -86,15 +91,38 @@ void drawHomeScreen()
 
 void setup() 
 {
+  Serial.begin(9600);
   SPI.begin();
   Waveshield.begin();
   tft.fillScreen(BLACK);
   tft.setRotation(3);
-
   drawHomeScreen();
+
 }
+
+int buttonWidth2 = 200;
+int buttonHeight2 = 50;
+int buttonX2 = (tft.width() - buttonWidth2) / 2;
+int buttonY2 = (tft.height() - buttonHeight2) / 2 - 60;
 
 void loop() 
 {
-  
+  TSPoint p = Waveshield.getPoint();
+
+  p.x = tft.width() - (map(p.x, 0, 480, tft.width(), 0));
+  p.y = tft.height() - (map(p.y, 0, 320, tft.height(), 0));
+
+  // Serial.print(p.x);
+  // Serial.print("    ");
+  // Serial.print(p.y);
+  // Serial.print("    ");
+  // Serial.print(p.z);
+  // Serial.println("");
+
+  // Verifica se o toque ocorreu dentro dos limites do botão INICIAR
+  if (p.x > buttonX2 && p.x < buttonX2 + buttonWidth2 && p.y > buttonY2 && p.y < buttonY2 + buttonHeight2)
+  {
+    Serial.print("TOCOU");
+  }
 }
+
