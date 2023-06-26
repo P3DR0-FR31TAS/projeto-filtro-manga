@@ -23,9 +23,19 @@ namespace
 // Variáveis globais
 bool iniciarPrograma = false;
 
+int screenWidth;
+int screenHeight;
+int buttonWidth;
+int buttonHeight;
+int buttonX;
+int buttonY;
+
+// Variáveis de debounce
+bool buttonState = false;
+
 void drawHomeScreen()
 {
-  // TITULO "MENU PRINCIPAL"
+  // DEFINE O TAMAHO E COR DO TITULO
   tft.setTextSize(3); 
   tft.setTextColor(BLACK);
 
@@ -41,19 +51,15 @@ void drawHomeScreen()
 
   tft.setCursor(textX, textY);
   tft.print("MENU PRINCIPAL");
-  //-------------------------------
 
+  screenWidth = tft.width();
+  screenHeight = tft.height();
+  buttonWidth = 160;
+  buttonHeight = 70;
+  buttonX = (screenWidth - buttonWidth) / 2;
+  buttonY = (screenHeight - buttonHeight) / 2 - 50;
 
-  //-------------------------------
-
-  int screenWidth = tft.width();
-  int screenHeight = tft.height();
-  int buttonWidth = 160;
-  int buttonHeight = 70;
-  int buttonX = (screenWidth - buttonWidth) / 2;
-  int buttonY = (screenHeight - buttonHeight) / 2 - 50;
-
-  // BUTÃO INCIAR PROGRAMA / ENCERRAR PROGRAMA
+  // BUTÃO INCIAR PROGRAMA 
   tft.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, DARKER_GREEN);
   tft.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, WHITE);
   tft.setTextColor(BLACK); // Define a cor do texto para branco
@@ -93,31 +99,70 @@ void setup()
   tft.setRotation(3);
   drawHomeScreen();
 
+  screenWidth = tft.width();
+  screenHeight = tft.height();
+  buttonWidth = 160;
+  buttonHeight = 70;
+  buttonX = (screenWidth - buttonWidth) / 2;
+  buttonY = (screenHeight - buttonHeight) / 2 - 50;
 }
 
-int buttonWidth2 = 200;
-int buttonHeight2 = 50;
-int buttonX2 = (tft.width() - buttonWidth2) / 2;
-int buttonY2 = (tft.height() - buttonHeight2) / 2 - 60;
+// int buttonWidth2 = 160;
+// int buttonHeight2 = 70;
+// int buttonX2 = (tft.width() - buttonWidth2) / 2;
+// int buttonY2 = (tft.height() - buttonHeight2) / 2 - 50;
 
 void loop() 
 {
   TSPoint p = Waveshield.getPoint();
-
-  p.x = tft.width() - (map(p.x, 0, 480, tft.width(), 0));
-  p.y = tft.height() - (map(p.y, 0, 320, tft.height(), 0));
-
-  // Serial.print(p.x);
-  // Serial.print("    ");
-  // Serial.print(p.y);
-  // Serial.print("    ");
-  // Serial.print(p.z);
-  // Serial.println("");
+  Waveshield.normalizeTsPoint(p);
 
   // Verifica se o toque ocorreu dentro dos limites do botão INICIAR
-  if (p.x > buttonX2 && p.x < buttonX2 + buttonWidth2 && p.y > buttonY2 && p.y < buttonY2 + buttonHeight2)
+  if (p.z > 10 && p.x > 160 && p.x < 330 && p.y > 70 && p.y < 140)
   {
-    Serial.print("TOCOU");
+    // Verifique se o botão estava pressionado anteriormente
+    if (!buttonState)
+    {
+      // Atualize o estado do botão
+      buttonState = true;
+
+      // Ação quando o botão é pressionado
+      iniciarPrograma = !iniciarPrograma;
+      Serial.println(iniciarPrograma);
+
+      // Altere a cor e o texto do botão
+      if (iniciarPrograma)
+      {
+        // BUTÃO INCIAR PROGRAMA 
+        tft.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, RED);
+        tft.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, WHITE);
+        tft.setTextColor(BLACK); // Define a cor do texto para branco
+        tft.setTextSize(3); // Define o tamanho do texto para 3
+        tft.setCursor(170, 90);
+        tft.println("ENCERRAR"); // Escreve o texto no botão
+      }
+      else
+      {
+        // BUTÃO INCIAR PROGRAMA 
+        tft.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, DARKER_GREEN);
+        tft.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 5, WHITE);
+        tft.setTextColor(BLACK); // Define a cor do texto para branco
+        tft.setTextSize(3); // Define o tamanho do texto para 3
+        tft.setCursor(170, 90);
+        tft.println("INICIAR"); // Escreve o texto no botão
+      }
+    }
+  }
+  else
+  {
+    // Verifique se o estado do botão mudou
+    if (buttonState)
+    {
+      // Atualize o estado do botão
+      buttonState = false;
+
+      // Ação quando o botão é liberado
+    }
   }
 }
 
