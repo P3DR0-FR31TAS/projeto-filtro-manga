@@ -3,9 +3,8 @@
 ## Description
 This project implements a bag filter using Arduino along with the Waveshare 4inch TFT Touch Shield. The purpose of the project is to automate the filtration process by controlling the bag filter system based on specified parameters.
 
-## Features
-# WORK IN PROGRESS
-- Touch-based user interface for manual control and adjustment of filtration parameters.
+## Features (WIP)
+- Touch-based user interface for manual control and adjustment of filtration parameters (WIP)
 
 ## Hardware Requirements
 - Arduino board (Arduino Mega)
